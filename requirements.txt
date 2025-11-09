@@ -1,0 +1,8 @@
+samplerate==0.1.0
+pyside6==6.5.3
+pyaudio==0.2.13
+websocket-client==1.6.4
+paddlepaddle==2.5.1
+paddlenlp==2.6.1
+termcolor==2.3.0
+pyinstaller==5.13.2
