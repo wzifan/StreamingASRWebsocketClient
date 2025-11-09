@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
+import os
 import sys
 import time
 
@@ -11,6 +12,10 @@ from PySide6.QtWidgets import (QApplication, QLabel, QWidget, QStyleOption, QSty
 
 from main_thread import MicrophoneRecordThread, WebSocketSendThread, WebSocketRecvThread
 from paddle_punctuation.predictor import PunctuationExecutor
+from display_board import DisplayBoard
+# from paddlenlp import Taskflow
+from modelscope import AutoModelForCausalLM, AutoTokenizer
+from threading import Thread
 
 
 class StreamingASRThread(QThread):
@@ -94,6 +99,10 @@ class StreamingASRThread(QThread):
 
         model_dir = './pun_models'
         tokenizer_dir = './ernie-3.0-medium-zh'
+        if not os.path.exists(model_dir):
+            model_dir = os.path.join('./_internal', model_dir)
+        if not os.path.exists(tokenizer_dir):
+            tokenizer_dir = os.path.join('./_internal', tokenizer_dir)
         self.pun_executor = PunctuationExecutor(model_dir=model_dir, tokenizer_dir=tokenizer_dir, use_gpu=False)
         self.thread_started = True
         self.text_show = ''

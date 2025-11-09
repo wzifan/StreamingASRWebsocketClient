@@ -5,5 +5,9 @@ datas = collect_data_files("samplerate")
 datas = datas + collect_dynamic_libs("paddle")
 datas = datas + collect_all('paddlenlp.transformers')[0]
 datas = datas + collect_all('datasets')[0]
+datas = datas + collect_all('modelscope')[0]
+datas = datas + collect_all('transformers')[0]
+datas = datas + collect_all('pytorch')[0]
+datas = datas + collect_data_files("yapf_third_party")
 datas = datas + [('./ernie-3.0-medium-zh', 'ernie-3.0-medium-zh'), ('./pun_models', 'pun_models'),
-                 ('./icons', 'icons'), ('./images', 'images')]
+                 ('./icons', 'icons'), ('./images', 'images'), ('./Qwen1.5-0.5B-Chat', 'Qwen1.5-0.5B-Chat')]

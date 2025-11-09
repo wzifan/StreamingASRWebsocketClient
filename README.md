@@ -1,56 +1,16 @@
 # 会议记录小助手
 
-A software capable of real-time speech-to-text (commonly used for meeting minutes, etc.), featuring the functionality to convert speech-to-text output into summaries using a local LLM (Version $\ge$ 5.0.0).
+版本：5.0.1
 
-Version：4.2.1
+软件著作权登记号：2023SR1804554 (v4.2)
 
-软件著作权登记号：2023SR1804554
+#### Git lfs clone and unpack files
 
-#### 主要代码结构
-
-```
-[项目根目录]
---ernie-3.0-medium-zh
-----ernie_3.0_medium_zh_vocab.txt
-----special_tokens_map.json
-----tokenizer_config.json
-----vocab.txt
-
---hooks
-----hook-paddle.py
-
---icons
-----icon.png
---images
-----*.png
-
---paddle_punctuation
-----logger.py
-----model.py
-----predictor.py
-----reader.py
-----sampler.py
-----utils.py
-
---pun_models
-----info.json
-----model.pdiparams
-----model.pdiparams.info
-----model.pdmodel
-----vocab.txt
-
---asr_widget.py
---display_board.py
---main_thread.py
---main_ui.py
---punctuation_infer.py
-
---LICENSE
---README.md
---软件使用说明.md
---用户使用协议.md
-
---requirements.txt
+```shell
+# lfs clone
+git lfs clone https://github.com/wzifan/StreamingASRWebsocketClient.git
+# unpack LLM files
+unzip Qwen1.5-0.5B-Chat.zip
 ```
 
 #### python环境依赖
@@ -59,13 +19,27 @@ Version：4.2.1
 
 ```
 samplerate==0.1.0
-pyside6==6.5.3
+pyside6==6.1.3
 pyaudio==0.2.13
 websocket-client==1.6.4
 paddlepaddle==2.5.1
 paddlenlp==2.6.1
 termcolor==2.3.0
-pyinstaller==5.13.2
+transformers==4.39.2
+modelscope==1.13.3
+accelerate==0.28.0
+pyinstaller==6.5.0
+
+torch==2.0.1+cpu
+torchvision==0.15.2 
+torchaudio==2.0.2 
+tensorboard==2.14.0
+```
+
+```shell
+# 创建和激活环境, 注意python版本为3.8以兼容windows7
+conda create -n env_name python=3.8
+conda activate env_name
 ```
 
 使用`pip install -r requirements.txt`安装环境
@@ -84,7 +58,7 @@ pip install -r requirements.txt
 self.server_addr = 'your sherpa-1.2 server address'
 self.server_port = 8888
 
-pyinstaller main_ui.py -Dw --name="会议记录小助手" --icon="./icons/icon.png"  --additional-hooks-dir="./hooks"
+pyinstaller main_ui.py -Dw --name="meeting_record_assistant" --icon="./icons/icon.png"  --additional-hooks-dir="./hooks"
 ```
 
 ------
@@ -134,7 +108,11 @@ pyinstaller main_ui.py -Dw --name="会议记录小助手" --icon="./icons/icon.p
 
 1. 安装1.2版本的sherpa，安装方式参照https://k2-fsa.github.io/sherpa/sherpa/install/from_source.html，sherpa-1.2的下载地址为https://github.com/k2-fsa/sherpa/archive/refs/tags/v1.2.tar.gz
 
-2. 下载模型
+2. 更改sherpa-1.2的语音切分代码文件
+
+   **为了使得语音分割更符合实际环境，我们对sherpa-1.2中的`sherpa-1.2\sherpa\python\sherpa\online_endpoint.py`与环境文件夹中的`[env_dir]/lib/python3.9/site-packages/sherpa/online_endpoint.py`进行了修改，修改好的文件在`server_related/online_endpoint.py`中，需自行替换**
+
+3. 下载模型
 
    ```shell
    git lfs install
@@ -143,7 +121,7 @@ pyinstaller main_ui.py -Dw --name="会议记录小助手" --icon="./icons/icon.p
 
    更多模型参见：https://k2-fsa.github.io/sherpa/pretrained-models.html
 
-3. 产生秘钥文件
+4. 产生秘钥文件
 
    ```shell
    cd [sherpa根目录]/sherpa/bin/web
@@ -156,11 +134,7 @@ pyinstaller main_ui.py -Dw --name="会议记录小助手" --icon="./icons/icon.p
 
    为了安全，将产生的`cert.pem`、`selfsigned.crt`、`private.key`放入`[key文件夹]`
 
-4. 修改源代码并运行服务启动脚本
-
-   **为了使得语音分割更符合实际环境，我们对sherpa-1.2中的`sherpa-1.2\sherpa\python\sherpa\online_endpoint.py`与环境文件夹中的`[env_dir]/lib/python3.9/site-packages/sherpa/online_endpoint.py`进行了修改，修改好的文件在`server_related/online_endpoint.py`中，需自行替换**
-
-   服务启动方式：
+5. 运行服务启动脚本
 
    ```shell
    conda activate [安装了sherpa的python环境]
@@ -178,7 +152,7 @@ pyinstaller main_ui.py -Dw --name="会议记录小助手" --icon="./icons/icon.p
 
 本软件使用了包括[LGPL](https://www.gnu.org/licenses/lgpl-3.0.html)、[Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0.html)、[MIT](https://mitsloan.mit.edu/licensing)等协议的内容，具体如下：
 
-1. [pyside6](https://pypi.org/project/PySide6/6.5.3/)遵循[LGPL License](https://www.gnu.org/s/lgpl-3.0.html)
+1. [pyside6](https://pypi.org/project/PySide6/6.5.3/)遵循[LGPL License](https://www.gnu.org/licenses/lgpl-3.0.html)
 
 2. [websocket-client](https://pypi.org/project/websocket-client/)、[paddlepaddle](https://pypi.org/project/paddlepaddle/)、[paddlenlp](https://pypi.org/project/paddlenlp/)遵循[Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html)
 3. [samplerate](https://pypi.org/project/samplerate/)、[pyaudio](https://pypi.org/project/PyAudio/)、[termcolor](https://pypi.org/project/termcolor/)遵循[MIT License](https://mitsloan.mit.edu/licensing)
